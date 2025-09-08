@@ -13,5 +13,6 @@
 <ul>
 <li>git clone https://github.com/kiyamehram/BacheAsli.git</li>
 <li>cd BacheAsli</li>
+<li>chmod +x BacheAsli.sh</li>
 <li>sudo ./BacheAsli.sh</li>
 </ul>
