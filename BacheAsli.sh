@@ -1,6 +1,5 @@
 #!/bin/bash
-# Advanced Automated Penetration Testing Tool
-# Author: Enhanced by Grok
+# Author: NoneR00tk1t
 # Version: 2.2
 
 
@@ -43,7 +42,7 @@ check_root() {
 }
 
 check_dependencies() {
-    local tools=("nmap" "masscan" "netdiscover" "arp-scan" "enum4linux" "onesixtyone" "snmp-check" "nikto" "dirb" "gobuster" "whatweb" "wpscan" "sqlmap" "xsstrike" "airmon-ng" "airodump-ng" "wash" "reaver" "aircrack-ng" "smbclient" "rpcclient" "showmount" "ldapsearch" "hydra" "metasploit-framework" "testssl.sh")
+    local tools=("nmap" "masscan" "netdiscover" "arp-scan" "enum4linux" "onesixtyone" "snmp-check" "nikto" "dirb" "gobuster" "whatweb" "wpscan" "sqlmap" "airmon-ng" "airodump-ng" "wash" "reaver" "aircrack-ng" "smbclient" "rpcclient" "showmount" "ldapsearch" "hydra" "testssl.sh")
     local missing_tools=()
 
     for tool in "${tools[@]}"; do
@@ -52,10 +51,18 @@ check_dependencies() {
         fi
     done
 
+    if ! command -v msfconsole &> /dev/null; then
+        missing_tools+=("metasploit-framework")
+    fi
+
+    if ! [ -f "/usr/share/xsstrike/xsstrike.py" ] && ! [ -f "/usr/bin/xsstrike" ]; then
+        missing_tools+=("xsstrike")
+    fi
+
     if [ ${#missing_tools[@]} -ne 0 ]; then
         log_message ERROR "Missing dependencies: ${missing_tools[*]}."
-        log_message INFO "Suggested installation command for Debian/Ubuntu: sudo apt-get install ${missing_tools[*]}"
-        log_message INFO "Suggested installation command for RedHat/CentOS: sudo yum install ${missing_tools[*]}"
+        log_message INFO "Note: On Kali Linux, some tools may need manual installation"
+        log_message INFO "For XSStrike: git clone https://github.com/s0md3v/XSStrike.git /usr/share/xsstrike"
         exit 1
     fi
 }
@@ -331,7 +338,6 @@ run_ssl_scan() {
     log_message INFO "SSL/TLS scan completed. Results saved in $OUTPUT_DIR/testssl_results.txt."
 }
 
-display_warning
 check_root
 check_dependencies
 load_config
